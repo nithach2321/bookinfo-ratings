@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/nithach2321/bookinfo-ratings:${{ ENV_NAME }}
+          tags: ghcr.io/nithach2321/bookinfo-ratings:${{ENV_NAME}}
   deploy:
     needs: build
     runs-on: ubuntu-20.04
@@ -39,10 +39,10 @@ jobs:
         uses: deliverybot/helm@v1
         with:
           helm: helm3
-          release: bookinfo-${GITHUB_ENV}-ratings
-          namespace: student43-bookinfo-${GITHUB_ENV}
+          release: bookinfo-{{ENV_NAME}}-ratings
+          namespace: student43-bookinfo-{{ENV_NAME}}
           chart: k8s/helm
-          value-files: k8s/helm-values/values-bookinfo-${GITHUB_ENV}-ratings.yaml
+          value-files: k8s/helm-values/values-bookinfo-{{ENV_NAME}}-ratings.yaml
           values: |
             {
               "extraEnv": {
@@ -54,4 +54,4 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Acceptance Test
-        run : curl http://bookinfo.${GITHUB_ENV}.opsta.net/student43/ratings/health | grep "Ratings is working"
+        run : curl http://bookinfo.{{ENV_NAME}}.opsta.net/student43/ratings/health | grep "Ratings is working"
