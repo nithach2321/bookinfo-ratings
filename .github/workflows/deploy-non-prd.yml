@@ -42,7 +42,7 @@ jobs:
         with:
           helm: helm3
           release: bookinfo-${GITHUB_ENV}-ratings
-          namespace: student43-bookinfo-${{$ITHUB_ENV}}
+          namespace: student43-bookinfo-${GITHUB_ENV}
           chart: k8s/helm
           value-files: k8s/helm-values/values-bookinfo-${GITHUB_ENV}-ratings.yaml
           values: |
