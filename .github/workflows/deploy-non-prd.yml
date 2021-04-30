@@ -24,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/nithach2321/bookinfo-ratings:${GITHUB_ENV}
+          tags: ghcr.io/nithach2321/bookinfo-ratings:${{ GITHUB_ENV }}
   deploy:
     needs: build
     runs-on: ubuntu-20.04
