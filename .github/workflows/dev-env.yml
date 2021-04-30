@@ -19,4 +19,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/nithach2321/bookinfo-ratings:latest
+          tags: ghcr.io/nithach2321/bookinfo-ratings:dev
