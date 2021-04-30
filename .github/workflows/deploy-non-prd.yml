@@ -12,8 +12,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Set env
         run: echo "ENV_NAME=$( [ "$GITHUB_REF" == "refs/heads/master" ] && echo 'uat' || echo ${GITHUB_REF##*/} )" >> $GITHUB_ENV
-      - name: Checkout code
-        uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
@@ -24,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/nithach2321/bookinfo-ratings:${{ GITHUB_ENV }}
+          tags: ghcr.io/nithach2321/bookinfo-ratings:${{ ENV_NAME }}
   deploy:
     needs: build
     runs-on: ubuntu-20.04
