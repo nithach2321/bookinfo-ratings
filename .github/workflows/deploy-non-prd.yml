@@ -1,12 +1,17 @@
-name: uat-env
+name: deploy-non-prd
 on:
   push:
     branches:
+      - dev
       - master
 jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set env
+        run: echo "ENV_NAME=$( [ "$GITHUB_REF" == "refs/heads/master" ] && echo 'uat' || echo ${GITHUB_REF##*/} )" >> $GITHUB_ENV
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Login to GitHub Container Registry
@@ -19,7 +24,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/nithach2321/bookinfo-ratings:uat
+          tags: ghcr.io/nithach2321/bookinfo-ratings:{{$GITHUB_ENV}}
   deploy:
     needs: build
     runs-on: ubuntu-20.04
@@ -36,13 +41,19 @@ jobs:
         uses: deliverybot/helm@v1
         with:
           helm: helm3
-          release: bookinfo-uat-ratings
-          namespace: student43-bookinfo-uat
+          release: bookinfo-{{$GITHUB_ENV}}-ratings
+          namespace: student43-bookinfo-{{$GITHUB_ENV}}
           chart: k8s/helm
-          value-files: k8s/helm-values/values-bookinfo-uat-ratings.yaml
+          value-files: k8s/helm-values/values-bookinfo-{{$GITHUB_ENV}}-ratings.yaml
           values: |
             {
               "extraEnv": {
                 "COMMIT_SHA": "${{ github.sha }}"
               }
             }
+  acceptance-test:
+    needs: deploy
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Acceptance Test
+        run : curl http://bookinfo.{{$GITHUB_ENV}}.opsta.net/student43/ratings/health | grep "Ratings is working"
