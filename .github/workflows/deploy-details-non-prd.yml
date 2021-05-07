@@ -1,4 +1,4 @@
-name: deploy-non-prd
+name: deploy-details-non-prd
 on:
   push:
     branches:
