@@ -1,4 +1,4 @@
-name: tagging-details-docker
+name: details-tagging-docker
 on: 
   workflow_dispatch:
     inputs:
@@ -7,7 +7,6 @@ on:
         required: false
 jobs:
   docker-tag:
-    needs: git-tag
     runs-on: ubuntu-20.04
     steps:
       - name: Login to GitHub Container Registry
